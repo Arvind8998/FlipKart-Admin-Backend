@@ -9,7 +9,7 @@ const app = express();
 //routes
 const authRoutes = require('./routes/auth')
 const adminRoutes = require('./routes/admin/auth')
-
+const categoryRoutes = require('./routes/category')
 
 //environment variables
 env.config();
@@ -34,7 +34,7 @@ app.use(bodyParser())
 // Router Middlewares
 app.use('/api', authRoutes)
 app.use('/api', adminRoutes)
-
+app.use('/api', categoryRoutes)
 
 
 app.listen(PORT,()=>{
