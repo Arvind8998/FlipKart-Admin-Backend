@@ -7,7 +7,7 @@ exports.signup = (req,res)=>{
     User.findOne({email: req.body.email})
     .exec((error,user)=>{
         if(user){
-            return res.status(400).send({
+            return res.status(400).json({
                 message: 'User already registered'
             })
         }
@@ -21,12 +21,13 @@ exports.signup = (req,res)=>{
         })
         _user.save((error,data)=>{
             if(error){
-                res.status(400).send({
+                res.status(400).json({
                     message: 'Something went wrong'
                 })
             }
             if(data){
-                return res.status(200).send({
+                return res.status(201).json({
+                    status : 201,
                     message: 'User created Successfully ...'
                 })
             }
@@ -39,23 +40,23 @@ exports.signIn = (req,res)=>{
     User.findOne({email})
     .exec((error,user)=>{
         if(error){
-            return res.status(400).send({error})
+            return res.status(400).json({error})
         }   
         if(user){
             if(user.authenticate(password)){
                 const token = jwt.sign({_id : user._id, role:user.role}, process.env.JWT_SECRET, {expiresIn: '1h'})
                 const {_id, firstName, lastName, email, role, fullName} = user
-                res.status(200).send({
+                res.status(200).json({
                     token,
                     user: {_id, firstName, lastName, email, role, fullName}
                 })
             }
             else{
-                return res.status(400).send({message: 'Invalid Password'})
+                return res.status(400).json({message: 'Invalid Password'})
             }
         }   
         else{
-            return res.status(400).send({
+            return res.status(400).json({
                 message: 'Something went wrong'})
         }
     })

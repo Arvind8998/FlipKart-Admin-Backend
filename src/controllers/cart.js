@@ -4,7 +4,7 @@ exports.addItemToCart = (req,res)=>{
 
     Cart.findOne({user: req.user._id})
     .exec((error,cart)=>{
-        if(error) return res.status(400).send({error})
+        if(error) return res.status(400).json({error})
         if(cart){
             // if cart is present update the cart
 
@@ -32,9 +32,9 @@ exports.addItemToCart = (req,res)=>{
             }
             Cart.findOneAndUpdate(condition,update)
                 .exec((error, _cart)=>{
-                    if(error) return res.status(400).send({error})
+                    if(error) return res.status(400).json({error})
                     if(_cart){
-                        return res.status(201).send({cart: _cart})
+                        return res.status(201).json({cart: _cart})
                     }
                 })
         }
@@ -46,9 +46,9 @@ exports.addItemToCart = (req,res)=>{
             })
 
             cart.save((error,cart)=>{
-                if(error) return res.status(400).send({error})
+                if(error) return res.status(400).json({error})
                 if(cart){
-                    return res.status(201).send({cart})
+                    return res.status(201).json({cart})
                 }
             })
         }

@@ -25,9 +25,9 @@ exports.createProduct = (req,res)=>{
 
     product
     .save((error,product)=>{
-        if(error) return res.status(400).send(error)
+        if(error) return res.status(400).json(error)
         if(product){
-            res.status(201).send(product)
+            res.status(201).json(product)
         }
     })
 }
