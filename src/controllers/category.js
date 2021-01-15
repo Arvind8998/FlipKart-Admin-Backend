@@ -22,7 +22,6 @@ function createCategories(categories,parentId=null){
 }
 
 exports.addCategory = (req,res)=>{
-
     const {name,parentId} = req.body
     const categoryObj = {
         name,
@@ -31,13 +30,17 @@ exports.addCategory = (req,res)=>{
     if(parentId){
         categoryObj.parentId = parentId
     }
+
+    if(req.file){
+        categoryObj.categoryImage =  process.env.API + '/public/' + req.file.filename
+    }
+
     const cat = new Category(categoryObj)
     cat.save((error,category)=>{
         if(error){
              return res.status(400).send({error})
         }
         if(category){
-            
             return res.status(200).send({category})
         }
     })

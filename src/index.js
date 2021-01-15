@@ -3,7 +3,7 @@ const env = require('dotenv')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-
+const path = require('path')
 const app = express();
 
 //routes
@@ -21,7 +21,7 @@ env.config();
 mongoose.connect(`mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@cluster0.tt1ex.mongodb.net/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority`,{
   useCreateIndex: true,
   useNewUrlParser: true,
-  useUnifiedTopology: true   
+  useUnifiedTopology: true
 }).then(()=>{
   console.log('DB Connected')
 })
@@ -31,7 +31,8 @@ const PORT = process.env.PORT
 
 //Middlewares
 app.use(cors())
-app.use(bodyParser())
+app.use(express.json())
+app.use('/public',express.static(path.join(__dirname,'uploads')))
 
 // Router Middlewares
 app.use('/api', authRoutes)

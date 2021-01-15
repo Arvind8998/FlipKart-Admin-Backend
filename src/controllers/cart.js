@@ -9,39 +9,34 @@ exports.addItemToCart = (req,res)=>{
             // if cart is present update the cart
 
             const {product,quantity} = req.body.cartItems
-            const item = cart.cartItems.find(cart=> cart.product = product)
-
+            const item = cart.cartItems.find(cart=> cart.product == product)
+            let condition, update
             if(item){
-                Cart.findOneAndUpdate({user: req.user._id, "cartItems.product": product},{
+                condition = {user: req.user._id, "cartItems.product": product}
+                update = {
                     "$set":{
-                        "cartItems": {
+                        "cartItems.$": {
                             ...req.body.cartItems,
                             quantity: item.quantity + quantity
                         }
                     }
-                })
-                .exec((error, _cart)=>{
-                    if(error) return res.status(400).send({error})
-                    if(_cart){
-                        return res.status(201).send({cart: _cart})
-                    }
-                })
+                }
             }
             else{
-                Cart.findOneAndUpdate({user: req.user._id},{
+                condition = {user: req.user._id}
+                update = {
                     "$push":{
                         "cartItems": req.body.cartItems
                     }
-                })
+                }
+            }
+            Cart.findOneAndUpdate(condition,update)
                 .exec((error, _cart)=>{
                     if(error) return res.status(400).send({error})
                     if(_cart){
                         return res.status(201).send({cart: _cart})
                     }
                 })
-            }
-
-            
         }
         else{
             // if cart's not present create a new cart
