@@ -15,6 +15,7 @@ function createCategories(categories,parentId=null){
             _id: cat._id,
             name: cat.name,
             slug: cat.slug,
+            parentId: cat.parentId,
             children: createCategories(categories, cat._id)
         })
     }
@@ -41,7 +42,7 @@ exports.addCategory = (req,res)=>{
              return res.status(400).json({error})
         }
         if(category){
-            return res.status(200).json({category})
+            return res.status(201).json({category})
         }
     })
 }
